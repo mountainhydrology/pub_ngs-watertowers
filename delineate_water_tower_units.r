@@ -18,7 +18,7 @@ library(lwgeom)
 
 ##SETTINGS
 base = "d:\\Dropbox (FutureWater)\\Team\\Projects\\Active\\2019001_NGS_WaterTowers\\data\\"
-outdir <- "d:\\Dropbox (FutureWater)\\Team\\Projects\\Active\\2019001_NGS_WaterTowers\\data\\index\\units_v3\\"
+outdir <- "d:\\Dropbox (FutureWater)\\Team\\Projects\\Active\\2019001_NGS_WaterTowers\\data\\index\\units\\"
 hydrobasins <- st_make_valid(read_sf(paste(base,"Basins\\FAO\\major_hydrobasins.shp",sep="")))
 continents <- c("europe","austpacific","centralam","neareast","northam","asia","southam")
 resolution <- 0.05

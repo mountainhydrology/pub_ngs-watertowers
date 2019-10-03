@@ -5,29 +5,37 @@ rm(list=ls(all=TRUE))
 
 ##SETTINGS
 # Specific base folder
-#base = "D:/walter/2019001_ngs_watertowers/data/"
 base = "e:/Dropbox (FutureWater)/Team/Projects/Active/2019001_ngs_watertowers/data/"
-#base = "c:/users/immer102/Dropbox (FutureWater)/Team/Projects/Active/2019001_ngs_watertowers/data/"
 
 # specify indicator files
-pindf = paste(base, "ERA5/processed/WTU_P_indicators_v2.csv",sep="")
-sindf = paste(base,"Snow/processed/WTU_Snow_indicators_v2.csv",sep="")
-gindf = paste(base,"Glaciers/processed/WTU_Glacier_indicators_v2.csv",sep="")
-swindf = paste(base,"HydroLakes/processed/WTU_lake_storage_volume_v2.csv",sep="")
+pindf = paste(base, "ERA5/processed/WTU_P_indicators.csv",sep="")
+sindf = paste(base,"Snow/processed/WTU_Snow_indicators.csv",sep="")
+gindf = paste(base,"Glaciers/processed/WTU_Glacier_indicators.csv",sep="")
+swindf = paste(base,"HydroLakes/processed/WTU_lake_storage_volume.csv",sep="")
 dindf = paste(base,"WaterDemandsWRI/processed/WTU_Demand_indicators_v3.csv",sep="")
-#dpindf = paste(base,"WaterDemandsWRI/processed/WTU_Demand_DS_P_available.csv",sep="")
-#wgindf = paste(base,"WaterDemandsWRI/processed/WTU_Water_Gap.csv",sep="")
 ddomindf = paste(base,"WaterDemandsWRI/processed/WTU_Domestic_Water_Gap_monthly_v2.csv",sep="")
 dindindf = paste(base,"WaterDemandsWRI/processed/WTU_Industrial_Water_Gap_monthly_v2.csv",sep="")
 dirrindf = paste(base,"WaterDemandsWRI/processed/WTU_Irrigation_Water_Gap_monthly_v2.csv",sep="")
 dnatindf = paste(base,"WaterDemandsWRI/processed/WTU_Natural_Water_Gap_monthly_v3.csv",sep="")
 
-
 # outputfile
-indf = paste(base, "indicators/indicators_v3.csv",sep="")
+indf = paste(base, "indicators/indicators.csv",sep="")
 
 # specify file with WTU specs
 wtuf = paste(base,"index/units/WTU_specs.csv",sep="")
+
+# weights of indicators
+w_ptot <- 1 #precipitation indicator
+w_stot <- 1 #snow indicator
+w_gtot <- 1 #glacier indicator
+w_swtot <- 1 #lake and reservoir indicator
+w_dem_irr <- 1 #irrigation demand indicator
+w_dem_dom <- 1 #domestic demand indicator
+w_dem_ind <- 1 #industrial demand indicator
+w_dem_nat <- 1 #natural demand indicator
+
+##SETTINGS END
+
 
 ## Read CSV with indicators
 pind <- read.csv(file=pindf, header=TRUE, sep=",")
@@ -40,10 +48,6 @@ swind <- read.csv(file=swindf, header=TRUE, sep=",")
 str(swind)
 dind <- read.csv(file=dindf, header=TRUE, sep=",")
 str(dind)
-#dpind <- read.csv(file=dpindf, header=TRUE, sep=",")
-#str(dpind)
-#wgind <- read.csv(file=wgindf, header=TRUE, sep=",")
-#str(wgind)
 ddomind <- read.csv(file=ddomindf, header=TRUE, sep=",")
 str(ddomind)
 dindind <- read.csv(file=dindindf, header=TRUE, sep=",")
@@ -91,16 +95,6 @@ indicator$swtot <- swind$Lake_Storage_Volume_WT_km3 / (pind$Pannual_WT_km3 + swi
 indicator$swtot[is.na(indicator$swtot)] <- 0
 
 # demand indicators
-# indicator$dem_irr <- dind$Irr_demand_basin_km3yr.1 / (dind$Irr_demand_basin_km3yr.1+dpind$Irr_P_ds_available_km3yr.1)
-# indicator$dem_irr[is.na(indicator$dem_irr)] <- 0
-# indicator$dem_ind <- dind$Ind_demand_basin_km3yr.1 / (dind$Ind_demand_basin_km3yr.1+dpind$Ind_P_ds_available_km3yr.1)
-# indicator$dem_ind[is.na(indicator$dem_ind)] <- 0
-# indicator$dem_dom <- dind$Dom_demand_basin_km3yr.1 / (dind$Dom_demand_basin_km3yr.1+dpind$Dom_P_ds_available_km3yr.1)
-# indicator$dem_dom[is.na(indicator$dem_dom)] <- 0
-# indicator$dem_nat <- dind$Nat_demand_basin_km3yr.1 / (dind$Nat_demand_basin_km3yr.1+dpind$Nat_P_ds_available_km3yr.1)
-# indicator$dem_nat[is.na(indicator$dem_nat)] <- 0
-# indicator$dem_timing <- wgind$Water_gap_total
-# indicator$dem_timing[is.na(indicator$dem_timing)] <- 0
 indicator$dem_irr <- dirrind$Water_gap_total / dind$Irr_demand_basin_km3yr.1
 indicator$dem_irr[is.na(indicator$dem_irr)] <- 0
 indicator$dem_ind <- dindind$Water_gap_total / dind$Ind_demand_basin_km3yr.1
@@ -109,17 +103,13 @@ indicator$dem_dom <- ddomind$Water_gap_total / dind$Dom_demand_basin_km3yr.1
 indicator$dem_dom[is.na(indicator$dem_dom)] <- 0
 indicator$dem_nat <- dnatind$Water_gap_total / dind$Nat_demand_basin_km3yr.1
 indicator$dem_nat[is.na(indicator$dem_nat)] <- 0
-#indicator$demtot <- 0.5*(indicator$dem_timing + ((indicator$dem_irr + indicator$dem_ind + indicator$dem_dom + indicator$dem_nat)/4))
-indicator$demtot <- (indicator$dem_irr + indicator$dem_ind + indicator$dem_dom + indicator$dem_nat)/4
-indicator$suptot <-  (indicator$ptot + indicator$stot+indicator$gtot + indicator$swtot)/4
+indicator$demtot <- ((indicator$dem_irr * w_dem_irr) + (indicator$dem_ind * w_dem_ind) + (indicator$dem_dom * w_dem_dom) + (indicator$dem_nat * w_dem_nat))/sum(w_dem_irr,w_dem_ind,w_dem_dom,w_dem_nat)
+indicator$suptot <-  ((indicator$ptot * w_ptot) + (indicator$stot * w_stot) + (indicator$gtot * w_gtot) + (indicator$swtot * w_swtot))/sum(w_ptot,w_stot,w_gtot,w_swtot)
 indicator$fin_sd <- indicator$demtot * indicator$suptot
 indicator$fin_sd_nor <- (indicator$fin_sd-min(indicator$fin_sd))/(max(indicator$fin_sd)-min(indicator$fin_sd))
 
-
-  
 # Save results
 write.csv(indicator, file=indf)
-
 
 # check results wit barplots
 # blue = sub indicator / red = final indicators
@@ -142,8 +132,6 @@ barplot(indicator$dem_irr,col="blue", ylab="dem_irr", space = 0.5,las=2,ylim=c(0
 barplot(indicator$dem_ind,col="blue", ylab="dem_ind", space = 0.5,las=2,ylim=c(0,1))
 barplot(indicator$dem_dom,col="blue", ylab="dem_dom", space = 0.5,las=2,ylim=c(0,1))
 barplot(indicator$dem_nat,col="blue", ylab="dem_nat", space = 0.5,las=2,ylim=c(0,1))
-#barplot(indicator$dem_tot,col="blue", ylab="dem_tot", space = 0.5,las=2,ylim=c(0,1))
-#barplot(indicator$dem_timing,col="blue", ylab="dem_timing", space = 0.5,las=2,ylim=c(0,1))
 barplot(indicator$suptot,col="red", ylab="suptot", space = 0.5,las=2,ylim=c(0,1))
 barplot(indicator$demtot,col="red", ylab="demtot", space = 0.5,las=2,ylim=c(0,1))
 barplot(indicator$fin_sd_nor,col="red", ylab="FINAL_NORM", space = 0.5,las=2,ylim=c(0,1))

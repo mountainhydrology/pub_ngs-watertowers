@@ -1,0 +1,18 @@
+This set of script is used to calculate indicators used in the water tower index calculation, the water tower index calculation, uncertainty and sensitivity analysis. The scripts require input data which is stored at
+
+Sequence of running scripts for Water Tower Index calculation:
+1) delineate_water_tower_units.r - Intersects GMBA and basins and derives downstream subbasins. Outputs WTU, basin and downstream basin as grid and vector
+2) calculate_P_indicators.R
+3) calculate_snow_indicators.R
+4) calculate_glacier_indicators.R
+5) calculate_surfacewater_indicators.R
+6) calculate_demand_indicators_annual.R - Calculates annual demands per basin per sector (irrigation, industrial, domestic, natural)
+7) calculate_demand_indicators_monthly.r - Calculates average annual water gap based on multiyear average monthly data
+8) CalculateIndicators.R - Calculates supply index, demand index, water tower index
+
+Sequence of running scripts for uncertainty analysis (can be done after Water Tower Index calculation is completed)
+1) calculate_demand_indicators_monthly_uncertainty.R - This script performs n realizations of the water gap calculations in script 7, taking into account uncertainty in the input data. Writes .csv file required by next script.
+2) uncertainty_analysis.R - Performs n calculations of the water tower index as in script 8, taking inputs from previous script and uncertainty in inputs that were not used in water gap calculations.
+
+Run script for sensitivity of indicator weights
+1) sensitivity_indicator_weights.r - Performs n calculations of the water tower index as in script 8, varying the weighting of the 8 indicators constituting the supply index and demand index.
