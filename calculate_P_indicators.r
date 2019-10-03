@@ -10,7 +10,7 @@ base <- "e:\\Dropbox (FutureWater)\\Team\\Projects\\Active\\2019001_NGS_WaterTow
 WTU <- raster(paste(base,"index\\units\\WTU.tif",sep=""))
 basins <- raster(paste(base,"index\\units\\basins.tif",sep=""))
 downstream <- raster(paste(base,"index\\units\\basins_downstream.tif",sep=""))
-WTU_specs <- read.csv(paste(base,"index\\units_v3\\wTU_specs.csv",sep=""),colClasses=c("NULL",NA,NA,NA,NA))
+WTU_specs <- read.csv(paste(base,"index\\units\\WTU_specs.csv",sep=""),colClasses=c("NULL",NA,NA,NA,NA))
 outdir <- paste(base,"ERA5\\processed\\",sep="")
 resolution <- 0.05
 
