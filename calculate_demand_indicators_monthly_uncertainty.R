@@ -35,7 +35,7 @@ ETymonmean <- brick(paste(Pdir,"evaporation\\ERA5_evaporation_ymonmean_2001_2017
 EFR <- brick(paste(base,"EnvironmentalFlow\\global_historical_riverdischarge_ymonmean_m3second_5min_2001_2014.nc4",sep=""))
 
 ###Annual demand input
-demands <- read.csv(paste(base,"WaterDemandsWRI\\processed\\WTU_Demand_indicators_v3.csv",sep=""))
+demands <- read.csv(paste(base,"WaterDemandsWRI\\processed\\WTU_Demand_indicators.csv",sep=""))
 
 #uncertainty input
 P_un_sd_wtu <- read.csv(paste(base,"uncertainty\\precipitation\\P_uncertainty_per_WTU.csv",sep=""))
