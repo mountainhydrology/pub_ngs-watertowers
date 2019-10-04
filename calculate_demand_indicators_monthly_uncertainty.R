@@ -9,12 +9,12 @@ library(foreach)
 library(doParallel)
 
 ##SETTINGS
-base <- "e:\\Dropbox (FutureWater)\\Team\\Projects\\Active\\2019001_NGS_WaterTowers\\data\\"
+base <- "d:\\Dropbox (FutureWater)\\Team\\Projects\\Active\\2019001_NGS_WaterTowers\\data\\"
 WTU <- raster(paste(base,"index\\units\\WTU.tif",sep=""))
 basins <- raster(paste(base,"index\\units\\basins.tif",sep=""))
 downstream <- raster(paste(base,"index\\units\\basins_downstream.tif",sep=""))
 WTU_specs <- read.csv(paste(base,"index\\units\\WTU_specs.csv",sep=""),colClasses=c("NULL",NA,NA,NA,NA))
-outdir <- paste("c:\\workdir\\",sep="")
+outdir <- paste("d:\\workdir\\",sep="")
 resolution <- 0.05
 demand_threshold <- 0.000001 #km3 per cell
 
@@ -47,7 +47,7 @@ dem_irr_un_sd <- 0.198
 
 #number of iteration for uncertainty analysis
 nstart <- 1
-nend <- 100
+nend <- 1000
 cores_unused <- 2
 ##SETTINGS END
 
