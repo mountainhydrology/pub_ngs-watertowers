@@ -11,7 +11,7 @@ base = "d:/Dropbox (FutureWater)/Team/Projects/Active/2019001_ngs_watertowers/da
 base_local <- "d:/workdir/"
 
 #file of final indicators used to extract ranking as in manuscript
-indicators = read.csv(paste(base, "Indicators/indicators_v3.csv",sep=""))
+indicators = read.csv(paste(base, "Indicators/indicators.csv",sep=""))
 
 # specify indicator files of subindicators as input for uncertainty analysis
 pindf = paste(base, "ERA5/processed/WTU_P_indicators.csv",sep="")
@@ -20,8 +20,8 @@ gindf = paste(base,"Glaciers/processed/WTU_Glacier_indicators.csv",sep="")
 swindf = paste(base,"HydroLakes/processed/WTU_lake_storage_volume.csv",sep="")
 
 # outputfiles
-outfile <- paste(base,"Indicators/uncertainty/uncertainty_analysis_ranking4.csv",sep="")
-outfile_scoring_sd <- paste(base,"Indicators/uncertainty/uncertainty_analysis_scoring4.csv",sep="")
+outfile <- paste(base,"Indicators/uncertainty/uncertainty_analysis_ranking.csv",sep="")
+outfile_scoring_sd <- paste(base,"Indicators/uncertainty/uncertainty_analysis_scoring.csv",sep="")
 
 # specify file with WTU specs
 wtuf = paste(base,"index/units/WTU_specs.csv",sep="")
@@ -128,7 +128,7 @@ for (i in 1:n)
   
   # demand indicators
   dind <- read.csv(paste(base_local,"uncertainty/water_gap_runs/",sprintf("%05d",i),"_WTU_Demand_indicators.csv",sep=""))
-  dind_orig <- read.csv(paste(base,"WaterDemandsWRI\\processed\\WTU_Demand_indicators_v3.csv",sep=""))
+  dind_orig <- read.csv(paste(base,"WaterDemandsWRI\\processed\\WTU_Demand_indicators.csv",sep=""))
   dirrind <- read.csv(paste(base_local,"uncertainty/water_gap_runs/",sprintf("%05d",i),"_WTU_Irrigation_Water_Gap_monthly.csv",sep=""))
   dindind <- read.csv(paste(base_local,"uncertainty/water_gap_runs/",sprintf("%05d",i),"_WTU_Industrial_Water_Gap_monthly.csv",sep=""))
   ddomind <- read.csv(paste(base_local,"uncertainty/water_gap_runs/",sprintf("%05d",i),"_WTU_Domestic_Water_Gap_monthly.csv",sep=""))
